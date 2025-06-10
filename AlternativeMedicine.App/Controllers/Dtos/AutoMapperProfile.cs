@@ -7,9 +7,11 @@ namespace AlternativeMedicine.App.Controllers.Dtos;
 
 public class AutoMapperProfile : Profile
 {
-    protected AutoMapperProfile()
+    public AutoMapperProfile()
     {
-        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryDto>()
+             .ForMember(dest => dest.Attachment,
+                      opt => opt.MapFrom(src => new AttachmentDto { Id = src.Attachment.Id, Path = src.Attachment.Path } ));
         CreateMap<CreateUpdateCategoryDto, Category>();
 
         CreateMap<Product, ProductDto>();

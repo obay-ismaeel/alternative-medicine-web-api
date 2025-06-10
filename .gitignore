@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/AlternativeMedicine.App/wwwroot/data/database.db
+/AlternativeMedicine.App/wwwroot/data/database.db-shm
+/AlternativeMedicine.App/wwwroot/data/database.db-wal
