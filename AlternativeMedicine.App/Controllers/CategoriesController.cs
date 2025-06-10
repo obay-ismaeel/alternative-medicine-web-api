@@ -4,6 +4,7 @@ using AlternativeMedicine.App.Controllers.Dtos.Incoming;
 using AlternativeMedicine.App.Controllers.Dtos.Outgoing;
 using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Domain.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -12,7 +13,8 @@ namespace AlternativeMedicine.App.Controllers;
 
 public class CategoriesController : BaseController
 {
-    public CategoriesController(IUnitOfWork unitOfWork) : base(unitOfWork)
+
+    public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
     }
 
