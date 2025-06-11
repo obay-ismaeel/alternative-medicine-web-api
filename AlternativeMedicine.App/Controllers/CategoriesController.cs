@@ -119,7 +119,7 @@ public class CategoriesController : BaseController
             return NotFound();
         }
 
-        var data = await _unitOfWork.Products.FindAllAsync(p => p.CategoryId == id, pageSize, pageNumber * pageSize);
+        var data = await _unitOfWork.Products.FindAllAsync(p => p.CategoryId == id, pageNumber, pageSize);
 
         var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
 

@@ -110,19 +110,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         IQueryable<Product> query = _context.Set<Product>();
 
-        query.Where(criteria);
-
         if (includes is not null)
         {
             foreach (var include in includes)
             {
-                query.Include(include);
+                query = query.Include(include);
             }
         }
 
-        query.Skip((pageNumber - 1) * pageSize)
+        query = query.Where(criteria)
+            .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
         return await query.ToListAsync();
     }
-}
+}   
