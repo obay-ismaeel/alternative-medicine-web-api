@@ -20,5 +20,5 @@ public interface IBaseRepository<T> where T : class
     Task<int> CountAsync();
     int Count(Expression<Func<T, bool>> criteria);
     Task<int> CountAsync(Expression<Func<T, bool>> criteria);
-    Task<IEnumerable<Product>> FindAllAsync(Expression<Func<Product, bool>> criteria, int pageNumber = 1, int pageSize = 10, string[] includes = null);
-}
+    Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int pageNumber = 1, int pageSize = 10, string[] includes = null);
+}   

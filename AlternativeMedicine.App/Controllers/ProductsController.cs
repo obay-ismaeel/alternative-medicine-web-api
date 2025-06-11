@@ -6,6 +6,8 @@ using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Domain.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AlternativeMedicine.App.Controllers;
 
@@ -17,9 +19,11 @@ public class ProductsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+    public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string searchQuery = "")
     {
-        var data = (await _unitOfWork.Products.Paginate(pageNumber, pageSize))
+        Expression<Func<Product, bool>> criteria = (p) => (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
+
+        var data = (await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize))
             .Select(p => _mapper.Map<ProductDto>(p)).ToList();
 
         var result = new PageResult<ProductDto>

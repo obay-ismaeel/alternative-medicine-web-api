@@ -106,9 +106,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return await query.ToListAsync();
     }
 
-    public async Task<IEnumerable<Product>> FindAllAsync(Expression<Func<Product, bool>> criteria, int pageNumber = 1, int pageSize = 10, string[] includes = null)
+    public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int pageNumber = 1, int pageSize = 10, string[] includes = null)
     {
-        IQueryable<Product> query = _context.Set<Product>();
+        IQueryable<T> query = _context.Set<T>();
 
         if (includes is not null)
         {
