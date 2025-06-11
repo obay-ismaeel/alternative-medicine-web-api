@@ -7,6 +7,7 @@ using AlternativeMedicine.App.Domain.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 
 namespace AlternativeMedicine.App.Controllers;
@@ -23,15 +24,17 @@ public class ProductsController : BaseController
     {
         Expression<Func<Product, bool>> criteria = (p) => (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
 
-        var data = (await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize))
-            .Select(p => _mapper.Map<ProductDto>(p)).ToList();
+        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize) 
+            : await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize);
+
+        var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
 
         var result = new PageResult<ProductDto>
         {
-            Data = data,
+            Data = dataDto,
             Page = pageNumber,
             ResultsPerPage = pageSize,
-            ResultCount = data.Count,
+            ResultCount = dataDto.Count,
             TotalCount = await _unitOfWork.Products.CountAsync()
         };
 
