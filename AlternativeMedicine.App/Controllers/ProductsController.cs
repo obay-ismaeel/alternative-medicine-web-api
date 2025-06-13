@@ -24,8 +24,8 @@ public class ProductsController : BaseController
     {
         Expression<Func<Product, bool>> criteria = (p) => (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
 
-        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize) 
-            : await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize);
+        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"]) 
+            : await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize, ["Attachments"]);
 
         var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
 
@@ -44,7 +44,7 @@ public class ProductsController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var product = await _unitOfWork.Products.GetByIdAsync(id);
+        var product = await _unitOfWork.Products.FindAsync(p => p.Id == id, ["Attachments"]);
 
         if (product == null)
         {
@@ -67,6 +67,17 @@ public class ProductsController : BaseController
         var product = _mapper.Map<Product>(productDto);
 
         await _unitOfWork.Products.AddAsync(product);
+
+        await _unitOfWork.CompleteAsync();
+
+        foreach (var image in productDto.Images)
+        {
+            var path = await _storage.StoreAsync(image);
+            
+            var attachment = new Attachment { ProductId = product.Id, Path = path };    
+            
+            product.Attachments.Add(attachment);
+        }
 
         await _unitOfWork.CompleteAsync();
 
@@ -98,11 +109,16 @@ public class ProductsController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var product = await _unitOfWork.Products.GetByIdAsync(id);
+        var product = await _unitOfWork.Products.FindAsync(p => p.Id == id, ["Attachments"]);
 
         if (product is null)
         {
             return NotFound();
+        }
+
+        foreach(var  attachment in product.Attachments)
+        {
+            _storage.Delete(attachment.Path);
         }
 
         _unitOfWork.Products.Delete(product);

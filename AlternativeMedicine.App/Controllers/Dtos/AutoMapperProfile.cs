@@ -13,7 +13,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<CreateUpdateCategoryDto, Category>();
 
-        CreateMap<Product, ProductDto>();
+        CreateMap<Product, ProductDto>()
+            .ForMember(dest => dest.Attachments, opt => opt.MapFrom(x => x.Attachments.Select(x => new AttachmentDto { Id=x.Id, Path = x.Path}))); ;
 
         CreateMap<CreateUpdateProductDto, Product>();
     }

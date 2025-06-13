@@ -7,6 +7,7 @@ using AlternativeMedicine.App.Domain.Entities;
 using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -121,7 +122,7 @@ public class CategoriesController : BaseController
     }
 
     [HttpGet("{id}/products")]
-    public async Task<IActionResult> GetProducts(int id, int pageNumber = 1, int pageSize = 10)
+    public async Task<IActionResult> GetProducts(int id, int pageNumber = 1, int pageSize = 10, string searchQuery = "")
     {
         var category = await _unitOfWork.Categories.GetByIdAsync(id);
 
@@ -130,7 +131,10 @@ public class CategoriesController : BaseController
             return NotFound();
         }
 
-        var data = await _unitOfWork.Products.FindAllAsync(p => p.CategoryId == id, pageNumber, pageSize);
+        Expression<Func<Product, bool>> predicate = (p) => p.CategoryId == id && (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
+
+        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"]) :
+            await _unitOfWork.Products.FindAllAsync(predicate, pageNumber, pageSize, ["Attachments"]);
 
         var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
 

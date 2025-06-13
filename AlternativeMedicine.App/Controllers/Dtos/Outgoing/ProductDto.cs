@@ -9,4 +9,5 @@ public class ProductDto
     public string Description { get; set; }
     public string Price { get; set; }
     public int CategoryId { get; set; }
+    public ICollection<AttachmentDto> Attachments { get; set; }
 }

@@ -18,7 +18,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Product>(x =>
         {
-            x.HasMany(c => c.Attachments).WithOne(a => a.Product).HasForeignKey(a => a.ProductId);
+            x.HasMany(c => c.Attachments).WithOne(a => a.Product).HasForeignKey(a => a.ProductId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
