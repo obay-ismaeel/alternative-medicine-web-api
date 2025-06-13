@@ -4,8 +4,10 @@ using AlternativeMedicine.App.Controllers.Dtos.Incoming;
 using AlternativeMedicine.App.Controllers.Dtos.Outgoing;
 using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Domain.Entities;
+using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -13,8 +15,7 @@ namespace AlternativeMedicine.App.Controllers;
 
 public class CategoriesController : BaseController
 {
-
-    public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper, IFileStorageService storage) : base(unitOfWork, mapper, storage)
     {
     }
 
@@ -41,7 +42,7 @@ public class CategoriesController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var category = await _unitOfWork.Categories.GetByIdAsync(id);
+        var category = await _unitOfWork.Categories.FindAsync(c => c.Id == id);
 
         if (category == null)
         {
@@ -65,20 +66,19 @@ public class CategoriesController : BaseController
 
         await _unitOfWork.Categories.AddAsync(category);
 
+        var path = await _storage.StoreAsync(categoryDto.Image);
+
+        category.ImagePath = path;
+
         await _unitOfWork.CompleteAsync();
 
         return CreatedAtAction(nameof(Get), new { id = category.Id }, _mapper.Map<CategoryDto>(category));
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, CreateUpdateCategoryDto categoryDto)
+    [HttpPut]
+    public async Task<IActionResult> Put(CreateUpdateCategoryDto categoryDto)
     {
-        if (id != categoryDto.Id)
-        {
-            return BadRequest("Ids don't match");
-        }
-
-        var category = await _unitOfWork.Categories.GetByIdAsync(id);
+        var category = await _unitOfWork.Categories.GetByIdAsync(categoryDto.Id);
 
         if (category is null)
         {
@@ -86,6 +86,15 @@ public class CategoriesController : BaseController
         }
 
         _mapper.Map(categoryDto, category);
+
+        if(categoryDto.Image is not null)
+        {
+            var newPath = await _storage.StoreAsync(categoryDto.Image);
+            
+            _storage.Delete(category.ImagePath);
+
+            category.ImagePath = newPath;
+        }
 
         await _unitOfWork.CompleteAsync();
 
@@ -105,6 +114,8 @@ public class CategoriesController : BaseController
         _unitOfWork.Categories.Delete(category);
 
         await _unitOfWork.CompleteAsync();
+
+        _storage.Delete(category.ImagePath);
 
         return NoContent();
     }

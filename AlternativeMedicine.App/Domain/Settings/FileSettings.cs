@@ -2,6 +2,7 @@
 
 public static class FileSettings
 {
+    public const string DefaultImagePath = FileSettings.ImagesPath + "\\no-image.jpg";
     public const string WebRootPath = "C:\\Users\\obayh\\OneDrive\\Desktop\\Projects\\AlternativeMedicine.App\\AlternativeMedicine.App\\wwwroot\\";
     public const string ImagesPath = "assets\\images";
     public const string AllowedExtensions = ".jpg,.png,.jpeg,.pdf";

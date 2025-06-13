@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 /AlternativeMedicine.App/wwwroot/data/database.db
 /AlternativeMedicine.App/wwwroot/data/database.db-shm
 /AlternativeMedicine.App/wwwroot/data/database.db-wal
+
+/AlternativeMedicine.App/wwwroot/assets/images/*
+/AlternativeMedicine.App/wwwroot/assets/images/no-image.jpg

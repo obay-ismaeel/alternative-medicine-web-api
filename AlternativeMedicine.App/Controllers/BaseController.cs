@@ -1,4 +1,5 @@
 ﻿using AlternativeMedicine.App.DataAccess;
+using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,11 @@ public class BaseController : ControllerBase
 {
     protected readonly IUnitOfWork _unitOfWork;
     protected readonly IMapper _mapper;
-    public BaseController(IUnitOfWork unitOfWork, IMapper mapper)
+    protected readonly IFileStorageService _storage;
+    public BaseController(IUnitOfWork unitOfWork, IMapper mapper, IFileStorageService storage)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _storage = storage;
     }
 }

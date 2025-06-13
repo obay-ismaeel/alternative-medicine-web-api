@@ -17,7 +17,7 @@ public class FileStorageService : IFileStorageService {
             return null;
         }
 
-        var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+        var uniqueFileName = Guid.NewGuid().ToString() + "." + file.FileName.Split('.')[1];
 
         var filePath = Path.Combine(FileSettings.ImagesPath, uniqueFileName);
 
@@ -34,6 +34,9 @@ public class FileStorageService : IFileStorageService {
     public void Delete(string? filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath))
+            return;
+
+        if (FileSettings.DefaultImagePath == filePath)
             return;
 
         var fullPath = Path.Combine(FileSettings.WebRootPath, filePath);

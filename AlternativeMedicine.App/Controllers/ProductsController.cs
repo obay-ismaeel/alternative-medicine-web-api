@@ -4,6 +4,7 @@ using AlternativeMedicine.App.Controllers.Dtos.Incoming;
 using AlternativeMedicine.App.Controllers.Dtos.Outgoing;
 using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Domain.Entities;
+using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,7 @@ namespace AlternativeMedicine.App.Controllers;
 
 public class ProductsController : BaseController
 {
-
-    public ProductsController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    public ProductsController(IUnitOfWork unitOfWork, IMapper mapper, IFileStorageService storage) : base(unitOfWork, mapper, storage)
     {
     }
 
