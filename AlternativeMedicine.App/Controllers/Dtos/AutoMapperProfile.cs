@@ -14,7 +14,7 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateUpdateCategoryDto, Category>();
 
         CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.Attachments, opt => opt.MapFrom(x => x.Attachments.Select(x => new AttachmentDto { Id=x.Id, Path = x.Path}))); ;
+            .ForMember(dest => dest.Attachments, opt => opt.MapFrom(x => x.Attachments.Select(x => new AttachmentDto { Id = x.Id, Path = x.Path, ProductId = x.ProductId}))); ;
 
         CreateMap<CreateUpdateProductDto, Product>();
 
