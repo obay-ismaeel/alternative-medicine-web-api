@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 
 namespace AlternativeMedicine.App.Controllers;
 
@@ -84,15 +85,10 @@ public class ProductsController : BaseController
         return CreatedAtAction(nameof(Get), new { id = product.Id }, _mapper.Map<ProductDto>(product));
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, CreateUpdateProductDto productDto)
+    [HttpPut]
+    public async Task<IActionResult> Put(CreateUpdateProductDto productDto)
     {
-        if (id != productDto.Id)
-        {
-            return BadRequest("Ids don't match");
-        }
-
-        var product = await _unitOfWork.Products.GetByIdAsync(id);
+        var product = await _unitOfWork.Products.GetByIdAsync(productDto.Id);
 
         if (product is null)
         {

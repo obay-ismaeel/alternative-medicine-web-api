@@ -17,5 +17,10 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Attachments, opt => opt.MapFrom(x => x.Attachments.Select(x => new AttachmentDto { Id=x.Id, Path = x.Path}))); ;
 
         CreateMap<CreateUpdateProductDto, Product>();
+
+        CreateMap<CreateAttachmentDto, Attachment>()
+            .ForMember(dest => dest.Path, opt => opt.Ignore());
+
+        CreateMap<Attachment, AttachmentDto>();
     }
 }
