@@ -61,6 +61,16 @@ public class CategoriesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Post(CreateUpdateCategoryDto categoryDto)
     {
+        if(categoryDto.ParentId is not null)
+        {
+            var parent = await _unitOfWork.Categories.GetByIdAsync(categoryDto.ParentId.Value);
+
+            if (parent is null)
+            {
+                return BadRequest("Parent category does not exist");
+            }
+        }
+
         categoryDto.Id = 0;
 
         var category = _mapper.Map<Category>(categoryDto);
@@ -84,6 +94,16 @@ public class CategoriesController : BaseController
         if (category is null)
         {
             return NotFound();
+        }
+
+        if (categoryDto.ParentId is not null)
+        {
+            var parent = await _unitOfWork.Categories.GetByIdAsync(categoryDto.ParentId.Value);
+
+            if (parent is null)
+            {
+                return BadRequest("Parent category does not exist");
+            }
         }
 
         _mapper.Map(categoryDto, category);

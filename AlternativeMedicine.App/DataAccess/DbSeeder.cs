@@ -23,6 +23,9 @@ public static class DbSeeder
         context.Categories.AddRange(LoadCategories());
         context.SaveChanges();
 
+        context.Categories.AddRange(LoadSubCategories());
+        context.SaveChanges();
+
         context.Products.AddRange(LoadProducts());
         context.SaveChanges();
 
@@ -42,6 +45,12 @@ public static class DbSeeder
         new Category{Name="Accessories", Description="Complete your beauty and grooming routine with our stylish accessories. From makeup brushes and hair tools to travel cases and organizers, we have the perfect additions to elevate your self-care experience.", ImagePath = FileSettings.DefaultImagePath},
         new Category{Name="Gifts", Description="Surprise your loved ones (or yourself!) with our beautifully curated gift sets. Whether for birthdays, holidays, or just because, our selection of skincare, fragrance, and beauty bundles makes gifting effortless and delightful.", ImagePath = FileSettings.DefaultImagePath},
         new Category{Name="Men", Description="Designed for the modern man, our men’s grooming collection features premium skincare, haircare, shaving essentials, and colognes. Keep your look sharp, fresh, and confident with high-quality products tailored for men.", ImagePath = FileSettings.DefaultImagePath},
+    };
+
+    public static IEnumerable<Category> LoadSubCategories() => new List<Category>()
+    {
+        new Category{Name="Eyes", Description="Discover radiant, glowing skin with our premium facial care collection. From cleansers and serums to masks and moisturizers, we offer the best products to nourish, hydrate, and rejuvenate your complexion. Whether you're targeting acne, aging, or dryness, find the perfect skincare routine for a flawless face.", ImagePath = FileSettings.DefaultImagePath, ParentId = 1 },
+        new Category{Name="Lips", Description="Pamper your skin from head to toe with our luxurious body care range. Indulge in silky body lotions, exfoliating scrubs, firming creams, and nourishing butters. Keep your skin soft, smooth, and beautifully scented every day.", ImagePath = FileSettings.DefaultImagePath, ParentId = 1},
     };
 
     public static IEnumerable<Attachment> LoadAttachments() => new List<Attachment>()
@@ -79,13 +88,13 @@ public static class DbSeeder
             Name="Charcoal Detox Clay Mask – Deep Cleansing & Purifying Treatment",
             Description="Draw out impurities and reveal clearer skin with our purifying charcoal clay mask. Enriched with bentonite clay and tea tree oil, it absorbs excess oil, minimizes pores, and detoxifies for a balanced, refreshed complexion. Ideal for oily and acne-prone skin.",
             Price="5.3$",
-            CategoryId=1,
+            CategoryId=12,
         },
         new Product {
             Name="Radiant-C Brightening Serum – Even Tone & Illuminate Skin",
             Description="Fade dark spots and boost your natural glow with our potent Vitamin C serum. Packed with antioxidants and ferulic acid, it fights free radicals, evens skin tone, and enhances luminosity. Lightweight and fast-absorbing for a brighter, more even complexion.",
             Price="150.3$",
-            CategoryId=1,
+            CategoryId=12,
         },
     };
 }
