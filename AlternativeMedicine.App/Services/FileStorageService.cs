@@ -39,7 +39,8 @@ public class FileStorageService : IFileStorageService {
         if (FileSettings.DefaultImagePath == filePath)
             return;
 
-        var fullPath = Path.Combine(FileSettings.WebRootPath, filePath);
+        var fullPath = Path.Combine(_env.WebRootPath, filePath);
+
         File.Delete(fullPath);
     }
 }
