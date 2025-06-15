@@ -43,4 +43,28 @@ public class FileStorageService : IFileStorageService {
 
         File.Delete(fullPath);
     }
+
+    public byte[]? GetImageBytes(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return null;
+        }
+
+        var fullPath = Path.Combine(_env.WebRootPath, filePath);
+
+        if (!File.Exists(fullPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            return File.ReadAllBytes(fullPath);
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

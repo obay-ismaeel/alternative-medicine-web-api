@@ -1,5 +1,4 @@
-﻿using AlternativeMedicine.App.Controllers.Dtos;
-using AlternativeMedicine.App.Controllers.Dtos.Generic;
+﻿using AlternativeMedicine.App.Controllers.Dtos.Generic;
 using AlternativeMedicine.App.Controllers.Dtos.Incoming;
 using AlternativeMedicine.App.Controllers.Dtos.Outgoing;
 using AlternativeMedicine.App.DataAccess;
@@ -25,7 +24,7 @@ public class ProductsController : BaseController
     {
         Expression<Func<Product, bool>> criteria = (p) => (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
 
-        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"]) 
+        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"])
             : await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize, ["Attachments"]);
 
         var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
@@ -74,9 +73,9 @@ public class ProductsController : BaseController
         foreach (var image in productDto.Images)
         {
             var path = await _storage.StoreAsync(image);
-            
-            var attachment = new Attachment { ProductId = product.Id, Path = path };    
-            
+
+            var attachment = new Attachment { ProductId = product.Id, Path = path };
+
             product.Attachments.Add(attachment);
         }
 
@@ -112,7 +111,7 @@ public class ProductsController : BaseController
             return NotFound();
         }
 
-        foreach(var  attachment in product.Attachments)
+        foreach (var attachment in product.Attachments)
         {
             _storage.Delete(attachment.Path);
         }
@@ -124,4 +123,118 @@ public class ProductsController : BaseController
         return NoContent();
     }
 
+    [HttpPost(nameof(UpdateWithAttachments))]
+    public async Task<IActionResult> UpdateWithAttachments(UpdateProductWithAttachments input, [FromServices] IFileComparerService fileComparerService)
+    {
+        var product = await _unitOfWork.Products.FindAsync(p => p.Id == input.Id, ["Attachments"]);
+        if (product is null)
+            return NotFound();
+
+        if (input.Name.IsNullOrEmpty() &&
+            input.Description.IsNullOrEmpty() &&
+            input.Price.IsNullOrEmpty() &&
+            input.Images.IsNullOrEmpty())
+        {
+            return BadRequest();
+        }
+
+        if (input.Name.IsNullOrEmpty() is false)
+            product.Name = input.Name!;
+
+        if (input.Description.IsNullOrEmpty() is false)
+            product.Description = input.Description!;
+
+        if (input.Price.IsNullOrEmpty() is false)
+            product.Price = input.Price!;
+
+        if (input.Images.IsNullOrEmpty() is false)
+        {
+            // Convert new images to bytes for comparison
+            var newImagesData = new List<byte[]>();
+            foreach (var image in input.Images!)
+            {
+                var bytes = await GetBytesFromIFormFileAsync(image);
+                if (bytes is null) return BadRequest("Invalid image file");
+                newImagesData.Add(bytes);
+            }
+
+            // Categorize attachments
+            var attachmentsToRemove = new List<Attachment>();
+            var attachmentsToKeep = new List<Attachment>();
+            var newImagesToAdd = new List<IFormFile>(input.Images);
+
+            foreach (var attachment in product.Attachments)
+            {
+                var existingImageBytes = _storage.GetImageBytes(attachment.Path);
+                if (existingImageBytes is null)
+                {
+                    attachmentsToRemove.Add(attachment); // Invalid file, mark for removal
+                    continue;
+                }
+
+                bool imageExistsInNew = false;
+
+                // Check if this existing image exists in the new set
+                foreach (var newImageBytes in newImagesData)
+                {
+                    if (fileComparerService.AreImagesIdentical(newImageBytes, existingImageBytes))
+                    {
+                        imageExistsInNew = true;
+                        break;
+                    }
+                }
+
+                if (imageExistsInNew)
+                {
+                    attachmentsToKeep.Add(attachment);
+
+                    // Remove from new images (since it's already existing)
+                    var index = newImagesData.FindIndex(b => fileComparerService.AreImagesIdentical(b, existingImageBytes));
+                    if (index >= 0)
+                    {
+                        newImagesToAdd.RemoveAt(index);
+                        newImagesData.RemoveAt(index);
+                    }
+                }
+                else
+                {
+                    attachmentsToRemove.Add(attachment);
+                }
+            }
+
+            // Process deletions
+            foreach (var attachment in attachmentsToRemove)
+            {
+                _storage.Delete(attachment.Path);
+                product.Attachments.Remove(attachment);
+            }
+
+            // Process additions
+            foreach (var newImage in newImagesToAdd)
+            {
+                var path = await _storage.StoreAsync(newImage);
+
+                var attachment = new Attachment { ProductId = product.Id, Path = path };
+
+                product.Attachments.Add(attachment);
+            }
+        }
+
+
+        await _unitOfWork.CompleteAsync();
+
+        return NoContent();
+    }
+
+    private async Task<byte[]?> GetBytesFromIFormFileAsync(IFormFile file)
+    {
+        if (file is null || file.Length is 0)
+            return null;
+
+        using var memoryStream = new MemoryStream();
+
+        await file.CopyToAsync(memoryStream);
+
+        return memoryStream.ToArray();
+    }
 }
