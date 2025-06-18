@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
@@ -27,7 +28,17 @@ public class ProductsController : BaseController
         var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"])
             : await _unitOfWork.Products.FindAllAsync(criteria, pageNumber, pageSize, ["Attachments"]);
 
-        var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
+        var rate = (await _unitOfWork.Currencies.FindAsync(x => true)).Rate;
+
+        var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).Select(p => new ProductDto
+        {
+            Id = p.Id,
+            Name = p.Name, 
+            Description = p.Description, 
+            CategoryId = p.CategoryId, 
+            Price = p.Price, 
+            SyrianPoundPrice = $"{rate * Convert.ToDouble(p.Price)}",
+        }).ToList();
 
         var result = new PageResult<ProductDto>
         {
@@ -56,6 +67,10 @@ public class ProductsController : BaseController
             Data = _mapper.Map<ProductDto>(product)
         };
 
+        var rate = (await _unitOfWork.Currencies.FindAsync(x => true)).Rate;
+
+        result.Data.SyrianPoundPrice = $"{Convert.ToDouble(product.Price) * rate}";
+
         return Ok(result);
     }
 
@@ -81,7 +96,13 @@ public class ProductsController : BaseController
 
         await _unitOfWork.CompleteAsync();
 
-        return CreatedAtAction(nameof(Get), new { id = product.Id }, _mapper.Map<ProductDto>(product));
+        var rate = (await _unitOfWork.Currencies.FindAsync(x => true)).Rate;
+
+        var returnDto = _mapper.Map<ProductDto>(product);
+
+        returnDto.SyrianPoundPrice = $"{rate * Convert.ToDouble(returnDto.Price)}";
+
+        return CreatedAtAction(nameof(Get), new { id = product.Id }, returnDto);
     }
 
     [HttpPut]

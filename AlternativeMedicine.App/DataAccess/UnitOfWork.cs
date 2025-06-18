@@ -11,12 +11,15 @@ public class UnitOfWork : IUnitOfWork
 
     public IBaseRepository<Attachment> Attachments { get; private set; }
 
+    public IBaseRepository<Currency> Currencies { get; private set; }
+
     public UnitOfWork(AppDbContext context)
     {
         _context = context;
         Categories = new BaseRepository<Category>(context);
         Products = new BaseRepository<Product>(context);
         Attachments = new BaseRepository<Attachment>(context);
+        Currencies = new BaseRepository<Currency>(context);
     }
 
     public async Task<int> CompleteAsync()

@@ -151,10 +151,18 @@ public class CategoriesController : BaseController
             return NotFound();
         }
 
-        Expression<Func<Product, bool>> predicate = (p) => p.CategoryId == id && (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
+        Expression<Func<Product, bool>> predicate;
 
-        var data = string.IsNullOrWhiteSpace(searchQuery) ? await _unitOfWork.Products.Paginate(pageNumber, pageSize, ["Attachments"]) :
-            await _unitOfWork.Products.FindAllAsync(predicate, pageNumber, pageSize, ["Attachments"]);
+        if (string.IsNullOrWhiteSpace(searchQuery))
+        {
+            predicate = (p) => p.CategoryId == id;
+        }
+        else
+        {
+            predicate = (p) => p.CategoryId == id && (EF.Functions.Like(p.Name, $"%{searchQuery}%") || EF.Functions.Like(p.Description, $"%{searchQuery}%"));
+        }
+
+        var data = await _unitOfWork.Products.FindAllAsync(predicate, pageNumber, pageSize, ["Attachments"]);
 
         var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
 
