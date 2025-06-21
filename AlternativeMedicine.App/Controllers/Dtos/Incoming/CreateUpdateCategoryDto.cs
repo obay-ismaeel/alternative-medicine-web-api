@@ -6,7 +6,9 @@ public class CreateUpdateCategoryDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    public string NameArabic { get; set; }
     public string Description { get; set; }
+    [ValidColor]
     public string Color { get; set; }
     public int? ParentId { get; set; }
     [AllowedExtensions(".png,.jpg,.jpeg")]

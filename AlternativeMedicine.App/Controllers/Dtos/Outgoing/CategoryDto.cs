@@ -7,4 +7,6 @@ public class CategoryDto
     public string Description { get; set; }
     public string ImagePath{ get; set; }
     public int? ParentId { get; set; }
+    public string NameArabic { get; set; }
+    public string Color { get; set; }
 }
