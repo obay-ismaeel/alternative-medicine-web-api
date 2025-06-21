@@ -38,22 +38,22 @@ public static class DbSeeder
 
     public static IEnumerable<Category> LoadCategories() => new List<Category>()
     {
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Facial", Description="Discover radiant, glowing skin with our premium facial care collection. From cleansers and serums to masks and moisturizers, we offer the best products to nourish, hydrate, and rejuvenate your complexion. Whether you're targeting acne, aging, or dryness, find the perfect skincare routine for a flawless face.", ImagePath = FileSettings.DefaultImagePath },   
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Body", Description="Pamper your skin from head to toe with our luxurious body care range. Indulge in silky body lotions, exfoliating scrubs, firming creams, and nourishing butters. Keep your skin soft, smooth, and beautifully scented every day.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Hair", Description="Transform your locks with our high-quality hair care essentials. From shampoos and conditioners to treatments and styling products, we have everything you need for strong, shiny, and healthy hair—no matter your hair type or concern.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Health", Description="Prioritize your well-being with our selection of health-boosting products. Explore vitamins, supplements, natural remedies, and wellness essentials designed to support a balanced and vibrant lifestyle.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Perfume", Description="Find your signature scent with our exquisite collection of perfumes and colognes. From fresh and floral to bold and woody, we offer a variety of fragrances to match every mood and personality.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Oil", Description="Experience the power of nature with our premium oils. Whether you're looking for essential oils for aromatherapy, carrier oils for skincare, or hair oils for deep conditioning, our selection delivers pure, nourishing benefits.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Makeup", Description="Enhance your natural beauty with our high-performance makeup range. Discover long-lasting foundations, vibrant eyeshadows, bold lipsticks, and more—everything you need to create stunning looks for any occasion.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Accessories", Description="Complete your beauty and grooming routine with our stylish accessories. From makeup brushes and hair tools to travel cases and organizers, we have the perfect additions to elevate your self-care experience.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Gifts", Description="Surprise your loved ones (or yourself!) with our beautifully curated gift sets. Whether for birthdays, holidays, or just because, our selection of skincare, fragrance, and beauty bundles makes gifting effortless and delightful.", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Men", Description="Designed for the modern man, our men’s grooming collection features premium skincare, haircare, shaving essentials, and colognes. Keep your look sharp, fresh, and confident with high-quality products tailored for men.", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Facial", ImagePath = FileSettings.DefaultImagePath },   
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Body", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Hair", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Health", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Perfume", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Oil", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Makeup", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Accessories", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Gifts", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Men", ImagePath = FileSettings.DefaultImagePath},
     };
 
     public static IEnumerable<Category> LoadSubCategories() => new List<Category>()
     {
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Eyes", Description="Discover radiant, glowing skin with our premium facial care collection. From cleansers and serums to masks and moisturizers, we offer the best products to nourish, hydrate, and rejuvenate your complexion. Whether you're targeting acne, aging, or dryness, find the perfect skincare routine for a flawless face.", ImagePath = FileSettings.DefaultImagePath, ParentId = 1 },
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Lips", Description="Pamper your skin from head to toe with our luxurious body care range. Indulge in silky body lotions, exfoliating scrubs, firming creams, and nourishing butters. Keep your skin soft, smooth, and beautifully scented every day.", ImagePath = FileSettings.DefaultImagePath, ParentId = 1},
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Eyes", ImagePath = FileSettings.DefaultImagePath, ParentId = 1 },
+        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Lips", ImagePath = FileSettings.DefaultImagePath, ParentId = 1},
     };
 
     public static IEnumerable<Attachment> LoadAttachments() => new List<Attachment>()
