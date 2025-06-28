@@ -174,6 +174,7 @@ public class CategoriesController : BaseController
             CategoryId = p.CategoryId,
             Price = p.Price,
             SyrianPoundPrice = $"{rate * Convert.ToDouble(p.Price)}",
+            Attachments = p.Attachments,
         }).ToList();
 
         var result = new PageResult<ProductDto>
