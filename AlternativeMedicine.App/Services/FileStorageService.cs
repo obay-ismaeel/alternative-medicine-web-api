@@ -2,7 +2,8 @@
 
 namespace AlternativeMedicine.App.Services;
 
-public class FileStorageService : IFileStorageService { 
+public class FileStorageService : IFileStorageService
+{
     private readonly IWebHostEnvironment _env;
 
     public FileStorageService(IWebHostEnvironment env)
@@ -12,51 +13,50 @@ public class FileStorageService : IFileStorageService {
 
     public async Task<string> StoreAsync(IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
+        if (file is null || file.Length is 0)
             return null;
-        }
 
-        var uniqueFileName = Guid.NewGuid().ToString() + "." + file.FileName.Split('.')[1];
+        var extension = Path.GetExtension(file.FileName);
+        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
-        var filePath = Path.Combine(FileSettings.ImagesPath, uniqueFileName);
+        var folderPath = Path.Combine(_env.WebRootPath, FileSettings.ImagesPath);
 
-        var fullPath = Path.Combine(_env.WebRootPath, filePath);
+        // Ensure directory exists
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        var fullPath = Path.Combine(folderPath, uniqueFileName);
 
         using (var stream = new FileStream(fullPath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
         }
 
-        return filePath;
+        // Return web-safe path
+        return $"{FileSettings.ImagesPath}/{uniqueFileName}".Replace("\\", "/");
     }
 
     public void Delete(string? filePath)
     {
-        if (string.IsNullOrWhiteSpace(filePath))
-            return;
-
-        if (FileSettings.DefaultImagePath == filePath)
+        if (string.IsNullOrWhiteSpace(filePath) ||
+            filePath.Replace("\\", "/") == FileSettings.DefaultImagePath)
             return;
 
         var fullPath = Path.Combine(_env.WebRootPath, filePath);
 
-        File.Delete(fullPath);
+        if (File.Exists(fullPath))
+            File.Delete(fullPath);
     }
 
     public byte[]? GetImageBytes(string filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath))
-        {
             return null;
-        }
 
         var fullPath = Path.Combine(_env.WebRootPath, filePath);
 
         if (!File.Exists(fullPath))
-        {
             return null;
-        }
 
         try
         {
