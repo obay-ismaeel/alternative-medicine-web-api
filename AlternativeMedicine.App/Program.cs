@@ -26,11 +26,11 @@ var app = builder.Build();
 var context = app.Services.CreateScope().ServiceProvider.GetService<AppDbContext>();
 DbSeeder.CreateAndSeedDb(context!);
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 //app.UseHttpsRedirection();
 
