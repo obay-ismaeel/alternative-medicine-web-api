@@ -1,4 +1,3 @@
-using AlternativeMedicine.App.Controllers.Dtos;
 using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Services;
 using Microsoft.EntityFrameworkCore;
