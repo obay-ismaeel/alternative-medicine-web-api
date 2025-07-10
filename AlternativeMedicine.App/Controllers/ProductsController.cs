@@ -7,7 +7,6 @@ using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -151,24 +150,24 @@ public class ProductsController : BaseController
         if (product is null)
             return NotFound();
 
-        if (input.Name.IsNullOrEmpty() &&
-            input.Description.IsNullOrEmpty() &&
-            input.Price.IsNullOrEmpty() &&
-            input.Images.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(input.Name) &&
+            string.IsNullOrEmpty(input.Description) &&
+            string.IsNullOrEmpty(input.Price) &&
+            input.Images?.Count == 0)
         {
             return BadRequest();
         }
 
-        if (input.Name.IsNullOrEmpty() is false)
+        if (string.IsNullOrEmpty(input.Name) is false)
             product.Name = input.Name!;
 
-        if (input.Description.IsNullOrEmpty() is false)
+        if (string.IsNullOrEmpty(input.Description) is false)
             product.Description = input.Description!;
 
-        if (input.Price.IsNullOrEmpty() is false)
+        if (string.IsNullOrEmpty(input.Price) is false)
             product.Price = input.Price!;
 
-        if (input.Images.IsNullOrEmpty() is false)
+        if (input.Images?.Count > 0)
         {
             // Convert new images to bytes for comparison
             var newImagesData = new List<byte[]>();

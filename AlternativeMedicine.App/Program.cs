@@ -1,4 +1,3 @@
-using AlternativeMedicine.App.Controllers.Dtos;
 using AlternativeMedicine.App.DataAccess;
 using AlternativeMedicine.App.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,15 @@ builder.Services.AddSwaggerGen();
 
 // initialize database connection 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>( options => { options.UseSqlite(connectionString); });
+builder.Services.AddDbContext<AppDbContext>( options => 
+{ 
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(
+            connectionString
+        )
+    ); 
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -8,9 +8,7 @@ using AlternativeMedicine.App.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AlternativeMedicine.App.Controllers;
 
@@ -164,14 +162,25 @@ public class CategoriesController : BaseController
 
         var data = await _unitOfWork.Products.FindAllAsync(predicate, pageNumber, pageSize, ["Attachments"]);
 
-        var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).ToList();
+        var rate = (await _unitOfWork.Currencies.FindAsync(x => true)).Rate;
+
+        var dataDto = data.Select(p => _mapper.Map<ProductDto>(p)).Select(p => new ProductDto
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            CategoryId = p.CategoryId,
+            Price = p.Price,
+            SyrianPoundPrice = $"{rate * Convert.ToDouble(p.Price)}",
+            Attachments = p.Attachments,
+        }).ToList();
 
         var result = new PageResult<ProductDto>
         {
             Data = dataDto,
             Page = pageNumber,
             ResultsPerPage = pageSize,
-            ResultCount = dataDto.Count(),
+            ResultCount = dataDto.Count,
             TotalCount = await _unitOfWork.Products.CountAsync()
         };
 
