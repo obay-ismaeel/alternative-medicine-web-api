@@ -17,7 +17,8 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Tell Railway/containers to listen on PORT env var
-ENV ASPNETCORE_URLS=http://+:${80}
-EXPOSE 80
+ENV ASPNETCORE_URLS=http://+:${PORT}
+EXPOSE 8080
+EXPOSE 5000
 
 ENTRYPOINT ["dotnet", "AlternativeMedicine.App.dll"]
