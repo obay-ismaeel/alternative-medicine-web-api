@@ -27,6 +27,15 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped<IFileComparerService, FileComparerService>();
 
+var basePath = Environment.GetEnvironmentVariable("RAILWAY_VOLUME_MOUNT_PATH")
+               ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/assets/images");
+
+// Ensure directory exists
+Directory.CreateDirectory(basePath);
+
+// ... write image
+
+
 var app = builder.Build();
 
 // seed database
