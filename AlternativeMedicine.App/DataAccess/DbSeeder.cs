@@ -38,22 +38,36 @@ public static class DbSeeder
 
     public static IEnumerable<Category> LoadCategories() => new List<Category>()
     {
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Facial", ImagePath = FileSettings.DefaultImagePath },   
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Body", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Hair", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Health", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Perfume", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Oil", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Makeup", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Accessories", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Gifts", ImagePath = FileSettings.DefaultImagePath},
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Men", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "العناية بالشعر", Name="Hair", ImagePath = FileSettings.DefaultImagePath },   
+        new Category{Color = "#FFFFFF", NameArabic = "الشامبو واللوشن", Name="Shampoo & Lotion", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "العناية بالوجه", Name="Face", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "العناية بالجسم", Name="Body ", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "الزيوت", Name="Oil", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "المكياج", Name="Makeup", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "صبغات الشعر", Name="Hair Dye", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "العطور", Name="Perfumes", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "للرجال", Name="For Men", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "الإكسسوارات", Name="Accessories", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "الهدايا", Name="Gifts", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "الصحة", Name="Health", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "الأقنعة", Name="Masks", ImagePath = FileSettings.DefaultImagePath},
+        new Category{Color = "#FFFFFF", NameArabic = "أطفال", Name="Kids", ImagePath = FileSettings.DefaultImagePath},
     };
 
     public static IEnumerable<Category> LoadSubCategories() => new List<Category>()
     {
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Eyes", ImagePath = FileSettings.DefaultImagePath, ParentId = 1 },
-        new Category{Color = "#FFFFFF", NameArabic = "عربي", Name="Lips", ImagePath = FileSettings.DefaultImagePath, ParentId = 1},
+        new Category{Color = "#FFFFFF", NameArabic = "العيون", Name="Eyes", ImagePath = FileSettings.DefaultImagePath, ParentId = 3 },
+        new Category{Color = "#FFFFFF", NameArabic = "كریم واقي من الشمس", Name="Sun Cream", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+        new Category{Color = "#FFFFFF", NameArabic = "كريم لللوجه", Name="Face Cream", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+        new Category{Color = "#FFFFFF", NameArabic = "غسول للوجه", Name="Face Wash", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+        new Category{Color = "#FFFFFF", NameArabic = "تونر", Name="Toner", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+        new Category{Color = "#FFFFFF", NameArabic = "الشفاه", Name="Lips", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+        new Category{Color = "#FFFFFF", NameArabic = "سيروم للوجه", Name="Serum", ImagePath = FileSettings.DefaultImagePath, ParentId = 3},
+
+        new Category{Color = "#FFFFFF", NameArabic = "لوشن للجسم", Name="Body Lotion", ImagePath = FileSettings.DefaultImagePath, ParentId = 4 },
+        new Category{Color = "#FFFFFF", NameArabic = "الیدین", Name="Hands", ImagePath = FileSettings.DefaultImagePath, ParentId = 4},
+        new Category{Color = "#FFFFFF", NameArabic = "القدمین", Name="Feet", ImagePath = FileSettings.DefaultImagePath, ParentId = 4},
+        new Category{Color = "#FFFFFF", NameArabic = "مزیل شعر للجسم", Name="Hair Remove", ImagePath = FileSettings.DefaultImagePath, ParentId = 4},
     };
 
     public static IEnumerable<Attachment> LoadAttachments() => new List<Attachment>()
