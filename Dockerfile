@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Tell Railway/containers to listen on PORT env var
-ENV ASPNETCORE_URLS=http://+:${PORT}
+ENV ASPNETCORE_URLS=http://+:${8080}
 EXPOSE 8080
 EXPOSE 5000
 
