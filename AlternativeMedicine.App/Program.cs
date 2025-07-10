@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 
 // initialize database connection 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>( options => { options.UseSqlite(connectionString); });
+builder.Services.AddDbContext<AppDbContext>( options => { options.UseSqlServer(connectionString); });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
