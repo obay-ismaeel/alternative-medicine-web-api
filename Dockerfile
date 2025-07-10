@@ -16,9 +16,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Tell Railway/containers to listen on PORT env var
+# Railway-specific configuration
 ENV ASPNETCORE_URLS=http://+:${PORT}
-EXPOSE 8080
-EXPOSE 5000
+ENV PORT=8080
+EXPOSE $PORT
 
 ENTRYPOINT ["dotnet", "AlternativeMedicine.App.dll"]
