@@ -10,7 +10,15 @@ builder.Services.AddSwaggerGen();
 
 // initialize database connection 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>( options => { options.UseSqlServer(connectionString); });
+builder.Services.AddDbContext<AppDbContext>( options => 
+{ 
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(
+            connectionString
+        )
+    ); 
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -22,8 +30,8 @@ builder.Services.AddScoped<IFileComparerService, FileComparerService>();
 var app = builder.Build();
 
 // seed database
-var context = app.Services.CreateScope().ServiceProvider.GetService<AppDbContext>();
-DbSeeder.CreateAndSeedDb(context!);
+//var context = app.Services.CreateScope().ServiceProvider.GetService<AppDbContext>();
+//DbSeeder.CreateAndSeedDb(context!);
 
 if (app.Environment.IsDevelopment())
 {
