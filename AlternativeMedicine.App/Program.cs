@@ -30,8 +30,8 @@ builder.Services.AddScoped<IFileComparerService, FileComparerService>();
 var app = builder.Build();
 
 // seed database
-//var context = app.Services.CreateScope().ServiceProvider.GetService<AppDbContext>();
-//DbSeeder.CreateAndSeedDb(context!);
+var context = app.Services.CreateScope().ServiceProvider.GetService<AppDbContext>();
+DbSeeder.CreateAndSeedDb(context!);
 
 if (app.Environment.IsDevelopment())
 {
