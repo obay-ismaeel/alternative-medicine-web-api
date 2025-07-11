@@ -31,12 +31,9 @@ var basePath = Environment.GetEnvironmentVariable("RAILWAY_VOLUME_MOUNT_PATH")
 
 Directory.CreateDirectory(basePath);
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        name: MyAllowSpecificOrigins,
+    options.AddDefaultPolicy(
         policy =>
         {
             policy
@@ -59,7 +56,7 @@ app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 app.UseAuthorization();
 
